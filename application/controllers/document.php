@@ -26,6 +26,8 @@ class Document extends CI_Controller {
 	}
 	
 	public function __show_doc($doc){
+	    $this->load->library('markdown');
+	    $doc->content=$this->markdown->parse($doc->content);
 	    $data = array('title' => 'Pulpo Docs - ' . $doc->title );
 	    $this->load->view('header_fixed',$data);
 		$this->load->view('showdoc',$doc);

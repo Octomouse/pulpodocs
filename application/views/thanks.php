@@ -5,3 +5,4 @@ codeigniter
 Spritz
 Mary TTS
 the koding team!
+Ricky for suggesting Mary TTS and Spritz!
