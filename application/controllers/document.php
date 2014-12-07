@@ -27,8 +27,8 @@ class Document extends CI_Controller {
 	
 	public function __show_doc($doc){
 	    $data = array('title' => 'Pulpo Docs - ' . $doc->title );
-	    $this->load->view('header',$data);
-		$this->load->view('spritztest',$doc);
+	    $this->load->view('header_fixed',$data);
+		$this->load->view('showdoc',$doc);
 		$this->load->view('footer');
 	}
 }
