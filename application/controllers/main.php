@@ -5,8 +5,9 @@ class Main extends CI_Controller {
 	public function index()
 	{
 	    $data = array('title' => 'Pulpo Docs' );
-		$this->load->view('header',$data);
+		$this->load->view('header_fixed',$data);
 		$this->load->view('mainpage');
+		$this->load->view('docform');
 		$this->load->view('footer');
 	}
 }

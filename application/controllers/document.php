@@ -20,7 +20,19 @@ class Document extends CI_Controller {
 	              );
 	    
 	    $this->document->insert($doc);
-	    $this->__show_doc($doc);
+	    $id=$this->db->insert_id();
+	    
+	    $data = array('title' => 'Pulpo Docs' );
+		$this->load->view('header_fixed',$data);
+		
+	    $data=array("id" => $id,
+	                "longurl" => site_url("document/show/$id"),
+	                "shorturl" => site_url("document/show_summary/$id")
+	                );  
+		$this->load->view('saved', $data);
+		$this->load->view('footer');
+	    
+	    //$this->__show_doc($doc);
 	}
 	
 	public function show($id){
