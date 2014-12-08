@@ -10,6 +10,7 @@ var contentParser = {
     spritzController: null,
     
     //Status flags (yuck!)
+    mute: false,
     isPlaying: false,
     isSpritzing: false,
     isSpritzReady: false,
@@ -77,9 +78,12 @@ var contentParser = {
     
     play: function(){
       console.log("[Play] playing.");
-      this.isPlaying=true;
+      if(!this.mute){
+          this.isPlaying=true;
+          this.nextAudio.play();
+      }
+      
       this.isSpritzing=true;
-      this.nextAudio.play();
       this.spritzController.startSpritzing(this.nextSpritzText);
     },
     
@@ -132,3 +136,14 @@ function updateSpritz() {
     });
     contentParser.init();
 }
+
+function toggleMute(){
+    contentParser.mute=!contentParser.mute;
+}
+
+$(function(){
+    var container=$("#spritzer");
+    container.html('');
+    contentParser.spritzController = new SPRITZ.spritzinc.SpritzerController(customOptions);
+    contentParser.spritzController.attach(container);
+});

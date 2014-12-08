@@ -8,14 +8,15 @@
   
   <div class="row">
     <div class="col-sm-12">
-        <div id="spritzer">
+        <div id="spritzer" class="center-block">
         </div>
     </div>
   </div>
   
   <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-12" style="float: none; margin: 0 auto;">
         <button type="Button" class="btn btn-primary" id="startbutton" onclick="javascript:updateSpritz();"><span class="glyphicon glyphicon-flash"></span> <span>Read it fast!</span></button>
+        <button type="Button" class="btn btn-primary" id="mutebutton" data-toggle="button" onclick="javascript:toggleMute();"><span class="glyphicon glyphicon-volume-off"></span></button>
     </div>
   </div>
   
