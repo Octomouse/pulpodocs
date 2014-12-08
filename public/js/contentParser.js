@@ -18,20 +18,22 @@ var contentParser = {
     init: function(){
         console.log("initializing contentParser");
         var rawContent=$(".document-content").text();
-        //console.log("Raw content: " + rawContent);
         this.content=rawContent.split(/[\n\.]+/);
-        console.log("Splitted content: " + this.content);
         this.contentIterator=Iterator(this.content);
         this.prepareNextPhrase();
     },
     
     prepareNextPhrase: function (){
+        do {
+            this.nextText=this.contentIterator.next()[1].trim();
+        } while(this.nextText==='');
+        
+        this.reloadCurrentPhrase();
+    },
+    
+    reloadCurrentPhrase: function(){
         this.isSpritzReady=false;
         this.isAudioReady=false;
-        do {
-            this.nextText=this.contentIterator.next()[1];
-        } while(this.nextText==='');
-        console.log("Preparing nextPhrase: " + this.nextText);
         SpritzClient.spritzify(this.nextText, 'en_GB', this.onSpritzifySuccess, this.onSpritzifyError);
         this.prerareNextAudio(this.nextText);
     },
@@ -51,6 +53,13 @@ var contentParser = {
         this.nextAudio.addEventListener('ended', 
         function (event) {
             console.log("audio playback ended, checking to play.");
+            contentParser.isPlaying=false;
+            contentParser.checkPlay();
+        }, false);
+        
+        this.nextAudio.addEventListener('error', 
+        function (event) {
+            console.log("audio playback error, skipping playback.");
             contentParser.isPlaying=false;
             contentParser.checkPlay();
         }, false);
@@ -117,5 +126,9 @@ function updateSpritz() {
     contentParser.spritzController = new SPRITZ.spritzinc.SpritzerController(customOptions);
     contentParser.spritzController.attach(container);
     container.on("onSpritzComplete", function(event){contentParser.spritzDone();});
+    container.on("onSpritzSpeedChange", function(event, speed) {
+        contentParser.wpm=speed;
+        contentParser.reloadCurrentPhrase();
+    });
     contentParser.init();
 }
