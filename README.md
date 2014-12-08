@@ -16,9 +16,9 @@ Pulpo docs addresses the "fine-print" problem by giving the content providers, a
 
 Here are some screenshots of the app in action, it's not visualy outstanding because i totally suck at ui :p but i think it is a creative and good solution.
 
-![Pulpodocs](http://take.ms/rqfm1 "Pulpodocs")
-![Pulpodocs](http://take.ms/lxZpq "Pulpodocs")
-![Pulpodocs](http://take.ms/w0jWG "Pulpodocs")
+http://take.ms/rqfm1 
+http://take.ms/lxZpq
+http://take.ms/w0jWG
 
 ## APIs used
 
