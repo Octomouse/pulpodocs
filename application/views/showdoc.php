@@ -8,9 +8,14 @@
   
   <div class="row">
     <div class="col-sm-12">
-        <input type="Button" id="startbutton" value="Read it fast!" onclick="javascript:updateSpritz();" />
         <div id="spritzer">
         </div>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-sm-12">
+        <button type="Button" class="btn btn-primary" id="startbutton" onclick="javascript:updateSpritz();"><span class="glyphicon glyphicon-flash"></span> <span>Read it fast!</span></button>
     </div>
   </div>
   

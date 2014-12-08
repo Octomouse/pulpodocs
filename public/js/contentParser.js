@@ -11,6 +11,7 @@ var contentParser = {
     
     //Status flags (yuck!)
     isPlaying: false,
+    isSpritzing: false,
     isSpritzReady: false,
     isAudioReady: false,
     
@@ -18,7 +19,7 @@ var contentParser = {
         console.log("initializing contentParser");
         var rawContent=$(".document-content").text();
         //console.log("Raw content: " + rawContent);
-        this.content=rawContent.split("\n");
+        this.content=rawContent.split(/[\n\.]+/);
         console.log("Splitted content: " + this.content);
         this.contentIterator=Iterator(this.content);
         this.prepareNextPhrase();
@@ -36,27 +37,27 @@ var contentParser = {
     },
     
     prerareNextAudio: function(text){
-    var playurl=TTS_URL + '?wpm=' + encodeURIComponent(this.wpm) + '&text=' + encodeURIComponent(text);
-    console.log("Downloading nextAudio from " +playurl);
-    
-    this.nextAudio = new Audio(playurl);
-    this.nextAudio.addEventListener('loadedmetadata', 
-    function (event) {
-        console.log("nextAudio is ready, checking to play.");
-        contentParser.isAudioReady=true;
-        contentParser.checkPlay();
-    }, false);
-    
-    this.nextAudio.addEventListener('ended', 
-    function (event) {
-        console.log("audio playback ended, checking to play.");
-        contentParser.isPlaying=false;
-        contentParser.checkPlay();
-    }, false);
+        var playurl=TTS_URL + '?wpm=' + encodeURIComponent(this.wpm) + '&text=' + encodeURIComponent(text);
+        console.log("Downloading nextAudio from " +playurl);
+        
+        this.nextAudio = new Audio(playurl);
+        this.nextAudio.addEventListener('loadedmetadata', 
+        function (event) {
+            console.log("nextAudio is ready, checking to play.");
+            contentParser.isAudioReady=true;
+            contentParser.checkPlay();
+        }, false);
+        
+        this.nextAudio.addEventListener('ended', 
+        function (event) {
+            console.log("audio playback ended, checking to play.");
+            contentParser.isPlaying=false;
+            contentParser.checkPlay();
+        }, false);
     },
     
     checkPlay: function(){
-      if(this.isSpritzReady && this.isAudioReady && !this.isPlaying){
+      if(this.isSpritzReady && this.isAudioReady && !this.isPlaying && !this.isSpritzing){
           console.log("[CheckPlay] All set! playing...");
           this.play();
           this.prepareNextPhrase();
@@ -68,24 +69,25 @@ var contentParser = {
     play: function(){
       console.log("[Play] playing.");
       this.isPlaying=true;
+      this.isSpritzing=true;
       this.nextAudio.play();
       this.spritzController.startSpritzing(this.nextSpritzText);
     },
     
     onSpritzifySuccess: function(spritzText) {
-    console.log("[Spritzify] Success... checking play...");
-    contentParser.nextSpritzText = spritzText;
-    contentParser.isSpritzReady = true;
-    contentParser.checkPlay();
+        console.log("[Spritzify] Success... checking play...");
+        contentParser.nextSpritzText = spritzText;
+        contentParser.isSpritzReady = true;
+        contentParser.checkPlay();
     },
     
     onSpritzifyError: function(error) {
-    console.log("[Spritzify] Error :S ..." + error.message);
+        console.log("[Spritzify] Error :S ..." + error.message);
     },
     
     spritzDone: function(){
         console.log("[spritzDone] Done spritzing, checking play...");
-        this.playing=false;
+        this.isSpritzing=false;
         this.checkPlay();
     }
   
@@ -111,9 +113,9 @@ var customOptions = {
 
 function updateSpritz() {
     var container=$("#spritzer");
+    container.html('');
     contentParser.spritzController = new SPRITZ.spritzinc.SpritzerController(customOptions);
     contentParser.spritzController.attach(container);
     container.on("onSpritzComplete", function(event){contentParser.spritzDone();});
-    $("#startbutton").fadeOut();
     contentParser.init();
 }
